@@ -1,0 +1,32 @@
+.navbar-container {
+    position: relative; /* Sets positioning context for absolute positioning inside */
+    background-color: black;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex; 
+    justify-content: flex-start;
+    align-items: center;
+    width: 50px;
+    height: 100%;
+    margin-left: 0;
+    flex-direction: column;
+}
+
+.navbar-elements ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: absolute; /* Absolute positioning within the navbar-container */
+    top: 50%;  /* Centering vertically - adjust as necessary */
+    left: 50%; /* Centering horizontally - adjust as necessary */
+    transform: rotate(-90deg) translateX(-50%) translateY(-50%); /* Adjust translation as necessary */
+    transform-origin: left top; /* Adjust this based on your specific layout */
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 20px;
+    align-items: center;
+}
+
+.navbar-elements li {
+    color: white;
+}

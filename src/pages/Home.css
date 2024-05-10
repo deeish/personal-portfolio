@@ -1,0 +1,17 @@
+.header-container {
+    flex: 1; /* Takes up the remaining space */
+    display: flex; /* Ensures flexbox properties apply */
+    justify-content: center; /* Centers content horizontally */
+    height: 100%; /* Make it take the full viewport height */
+    width: 100%; /* Adjust width as needed */
+    align-items: center; /* Centers content vertically */
+    padding: 10px; /* Adds padding around the content */
+    border: 3px solid black; /* Corrected border syntax */
+    margin: auto; /* Optional: adds margin for better visibility */
+}
+
+.headertext-container {
+    display: grid; /* Sets up a grid layout if needed */
+    grid-template-columns: 1fr; /* Example: one column grid */
+    border: 2px dashed red; /* Additional border for visibility */
+}
