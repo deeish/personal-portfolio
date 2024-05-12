@@ -1,22 +1,31 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './NavBar.css';
+import Button from '@mui/material/Button';
 
 function NavBar() {
     return (
       <div className="navbar-container">
+        <div className="logo">
+            <img src="path_to_logo.png" alt="Logo"/>
+        </div>
         <div className="navbar-elements">
         <nav>
-          <ul>
-            <li><p1>insert logo</p1></li>
-            <li>Home</li>
-            <li>About</li>
-            <li>Contact</li>
+        <ul>
+            <li>
+              <Button component={Link} to="/" variant="outlined" color="inherit">Home</Button>
+            </li>
+            <li>
+              <Button component={Link} to="/about" variant="outlined" color="inherit">About</Button>
+            </li>
+            <li>
+              <Button component={Link} to="/contact" variant="outlined" color="inherit">Contact</Button>
+            </li>
           </ul>
         </nav>
         </div>
       </div>
     );
   }
-  
 
 export default NavBar;

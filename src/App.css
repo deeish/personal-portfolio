@@ -6,6 +6,6 @@
 
 .content {
    flex-grow: 1;/* Ensures it takes the remaining space */
-   overflow-y: auto; /*Adds scroll to content area if needed */
+   /*overflow-y: auto; Adds scroll to content area if needed */
    padding: 20px; /*Padding around the content */
 }

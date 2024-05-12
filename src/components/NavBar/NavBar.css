@@ -12,6 +12,13 @@
     flex-direction: column;
 }
 
+.logo {
+    position: absolute;
+    top: 15px; /* Adjust this value to control the distance from the top */
+    left: 10px; /* Adjust this value to control the distance from the side */
+    width: 100%; /* Ensures the logo takes the full width of the navbar-container */
+}
+
 .navbar-elements ul {
     list-style: none;
     padding: 0;
@@ -29,4 +36,16 @@
 
 .navbar-elements li {
     color: white;
+}
+
+/* Adding styles for links inside the list items */
+.navbar-elements li a {
+    color: white; /* Sets the color of the text */
+    text-decoration: none; /* Removes underline */
+    /*font-weight: bold; /* Optional: adds boldness to make it more prominent */
+}
+
+/* Add hover effects to improve user interaction */
+.navbar-elements li a:hover {
+    color: gray; /* Change color on hover */
 }
