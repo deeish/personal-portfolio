@@ -1,27 +1,48 @@
-import React from 'react';
-import { Typography, Box, Grid } from '@mui/material';
+import React from "react";
+import "./About.css";
+import { Typography, Box, Grid, Avatar } from "@mui/material";
 
 function About() {
   return (
-    <Box sx={{ flexGrow: 1, padding: 3 }}>
+    <Box className="about-container" sx={{ flexGrow: 1, padding: 3 }}>
       <Grid container spacing={2} alignItems="center">
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={4} className="about-avatar">
+          <Avatar
+            alt="Dylan Salmo"
+            src={`${process.env.PUBLIC_URL}/images/DylanPic.jpeg`}
+            sx={{ width: 270, height: 370, margin: "auto" }}
+            className="avatar-img"
+          />
         </Grid>
         <Grid item xs={12} sm={8}>
-          <Typography variant="h3" component="h1" gutterBottom>
+          <Typography
+            variant="h3"
+            component="h1"
+            gutterBottom
+            className="about-title"
+          >
             About Me
           </Typography>
-          <Typography variant="body1" paragraph>
-            Hello! I'm <strong>Your Name</strong>, a passionate and dedicated <em>your profession</em> with a love for all things creative. I specialize in <em>your specialty</em>, and have <em>years of experience or education background</em> in the field.
+          <Typography variant="body1" paragraph className="about-text">
+            Hey there! I'm <strong className="about-highlight">Dylan Salmo</strong>, a software
+            engineer who loves all things creative. I'm into front-end tech like
+            HTML, CSS, JavaScript, and React, and I've got some experience from
+            a software engineering internship.
           </Typography>
           <Typography variant="body1" paragraph>
-            My journey started in <em>your starting point</em>, and over the years, I've developed a deep understanding of <em>key areas of your profession</em>. My approach to work is centered around creating meaningful, user-centric solutions that resonate with the audience and deliver tangible results.
+            I've worked on some exciting projects, tackling complex problems and
+            creating efficient solutions. My experience includes developing
+            algorithms for large databases using SQL and collaborating with
+            teams to build robust applications.
           </Typography>
           <Typography variant="body1" paragraph>
-            When I'm not working, I enjoy <em>your hobbies or interests</em>. These activities help me stay inspired and energized, ready to tackle challenging projects.
-          </Typography>
-          <Typography variant="body1">
-            I'm excited to explore opportunities to collaborate on projects that are innovative and impactful. Let's connect!
+            When I'm not coding, I love getting outside and staying active.
+            During the winter months, you'll find me skiing and
+            enjoying the snow. The rest of the year, I'm all about hitting the
+            gym, playing sports, or going on outdoor adventures. For downtime, I
+            like video games and board games—perfect for relaxing and having
+            some fun with friends and family. These hobbies keep me energized
+            and always ready to bring my best to my work.
           </Typography>
         </Grid>
       </Grid>

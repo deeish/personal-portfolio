@@ -1,51 +1,61 @@
 .navbar-container {
-    position: relative; /* Sets positioning context for absolute positioning inside */
     background-color: black;
     padding: 10px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    display: flex; 
-    justify-content: flex-start;
-    align-items: center;
-    width: 50px;
-    height: 100%;
-    margin-left: 0;
-    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; 
+    height: 80px;
+    width: 100%;
 }
 
 .logo {
-    position: absolute;
-    top: 15px; /* Adjust this value to control the distance from the top */
-    left: 10px; /* Adjust this value to control the distance from the side */
-    width: 100%; /* Ensures the logo takes the full width of the navbar-container */
+    width: 40px;
+    height: 40px;
+    margin-top: 10px; 
 }
+
+.logo img {
+    width: 100%;
+    height: auto;
+}
+
+.navbar-elements {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
 
 .navbar-elements ul {
     list-style: none;
     padding: 0;
     margin: 0;
-    position: absolute; /* Absolute positioning within the navbar-container */
-    top: 50%;  /* Centering vertically - adjust as necessary */
-    left: 50%; /* Centering horizontally - adjust as necessary */
-    transform: rotate(-90deg) translateX(-50%) translateY(-50%); /* Adjust translation as necessary */
-    transform-origin: left top; /* Adjust this based on your specific layout */
+    position: absolute;
+    top: 50%;  
+    left: 50%; 
+    transform: rotate(-90deg) translateX(-50%) translateY(-50%); 
+    transform-origin: left top; 
     display: flex;
     flex-direction: row-reverse;
-    gap: 20px;
+    gap: 45px;
     align-items: center;
 }
 
 .navbar-elements li {
-    color: white;
+    color: #fafafa;
 }
 
-/* Adding styles for links inside the list items */
 .navbar-elements li a {
-    color: white; /* Sets the color of the text */
-    text-decoration: none; /* Removes underline */
-    /*font-weight: bold; /* Optional: adds boldness to make it more prominent */
+    color: #fafafa; 
+    text-decoration: none; 
 }
 
-/* Add hover effects to improve user interaction */
 .navbar-elements li a:hover {
-    color: gray; /* Change color on hover */
+    color: gray; 
 }

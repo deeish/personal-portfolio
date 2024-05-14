@@ -1,11 +1,38 @@
+
+html, body {
+  width: 100%;
+  height: 100%; 
+  margin: 0;
+  padding: 0;
+  background-color: #fafafa; 
+  overflow-x: hidden; 
+}
+
+body {
+  position: relative;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
 .main-layout {
-  display: flex; 
-  flex-direction: row; 
-  height: 100vh; /*Full viewport height */
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh; 
+  background-color: transparent; 
+}
+
+.navbar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 50px;
+  background-color: black;
+  z-index: 1000;
 }
 
 .content {
-   flex-grow: 1;/* Ensures it takes the remaining space */
-   /*overflow-y: auto; Adds scroll to content area if needed */
-   padding: 20px; /*Padding around the content */
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 20px;
+  margin-left: 50px;
 }

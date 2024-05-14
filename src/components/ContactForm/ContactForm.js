@@ -2,9 +2,6 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
-
-//try to get the colors working for this,
-//ex: wrong information = red, right information = green...
 function ContactForm() {
     return (
         <Box
@@ -15,7 +12,7 @@ function ContactForm() {
                 alignItems: 'center',
                 padding: 2,
                 maxWidth: 700,
-                margin: 'auto'
+                margin: 'auto',
             }}
             noValidate
             autoComplete="off"
@@ -27,7 +24,14 @@ function ContactForm() {
                     label="First Name"
                     variant="outlined"
                     autoComplete="given-name"
-                    sx={{ flex: 1 }}
+                    sx={{
+                        flex: 1,
+                        '& .MuiOutlinedInput-root': {
+                            '&.Mui-focused fieldset': {
+                                borderColor: 'blue', 
+                            },
+                        },
+                    }}
                 />
                 <TextField
                     required
@@ -35,7 +39,14 @@ function ContactForm() {
                     label="Last Name"
                     variant="outlined"
                     autoComplete="family-name"
-                    sx={{ flex: 1 }}
+                    sx={{
+                        flex: 1,
+                        '& .MuiOutlinedInput-root': {
+                            '&.Mui-focused fieldset': {
+                                borderColor: 'blue', 
+                            },
+                        },
+                    }}
                 />
             </Box>
             <TextField
@@ -46,6 +57,13 @@ function ContactForm() {
                 variant="outlined"
                 autoComplete="email"
                 fullWidth
+                sx={{
+                    '& .MuiOutlinedInput-root': {
+                        '&.Mui-focused fieldset': {
+                            borderColor: 'blue', 
+                        },
+                    },
+                }}
             />
             <TextField
                 required
@@ -55,6 +73,13 @@ function ContactForm() {
                 rows={4}
                 variant="outlined"
                 fullWidth
+                sx={{
+                    '& .MuiOutlinedInput-root': {
+                        '&.Mui-focused fieldset': {
+                            borderColor: 'blue', 
+                        },
+                    },
+                }}
             />
         </Box>
     );

@@ -1,17 +1,56 @@
+.home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 2rem; 
+}
+
 .header-container {
-    flex: 1; /* Takes up the remaining space */
-    display: flex; /* Ensures flexbox properties apply */
-    justify-content: center; /* Centers content horizontally */
-    height: 100%; /* Make it take the full viewport height */
-    width: 100%; /* Adjust width as needed */
-    align-items: center; /* Centers content vertically */
-    padding: 10px; /* Adds padding around the content */
-    border: 3px solid black; /* Corrected border syntax */
-    margin: auto; /* Optional: adds margin for better visibility */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
 }
 
 .headertext-container {
-    display: grid; /* Sets up a grid layout if needed */
-    grid-template-columns: 1fr; /* Example: one column grid */
-    border: 2px dashed red; /* Additional border for visibility */
+    text-align: center;
+    margin-bottom: 1.5rem; 
+}
+
+.headertext-container h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 5rem; 
+    font-weight: 700;
+    color: #053742;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    transition: text-shadow 0.3s ease-in-out; 
+}
+
+.headertext-container .sub-title:hover {
+    animation: rgb-glow 1s infinite alternate;
+}
+
+@keyframes rgb-glow {
+    0% { text-shadow: 0 0 10px red; }
+    33% { text-shadow: 0 0 10px blue; }
+    66% { text-shadow: 0 0 10px green; }
+    100% { text-shadow: 0 0 10px yellow; }
+}
+
+.headertext-container .sub-title {
+    font-family: 'Roboto', sans-serif;
+    font-size: 2.5rem; 
+    color: #333;
+    font-weight: 300;
+}
+
+.info-box-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    width: 100%;
+    flex-wrap: wrap;
+    margin-top: 2rem; 
 }

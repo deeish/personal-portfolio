@@ -1,25 +1,59 @@
 .contact-container {
-    padding: 20px;
-    max-width: 800px;
-    margin: auto;
+    padding: 30px; 
+    max-width: 960px; 
+    margin: 0 auto; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.contact-heading {
+.contact-container form {
+    width: 100%; 
+    max-width: 900px; 
+}
+
+.contact-container h1 {
     text-align: center;
+    color: #333;
+    font-family: 'Arial', sans-serif;
+    font-size: 3rem; 
+    margin-bottom: 1em; 
 }
 
 .contact-intro {
-    margin-bottom: 20px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    color: #444;
+    font-size: 1.3rem;
+    line-height: 1.8;
+    margin-bottom: 25px;
+    max-width: 90%;
+    text-align: center;
 }
 
-.submit-button {
-    position: relative; 
-    right: -16px;        
+@media (max-width: 768px) {
+    .contact-intro {
+        font-size: 1.2rem; 
+        padding: 0 15px; 
+    }
 }
 
+.contact-container a {
+    color: #606060;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
+}
 
-.social-links {
-    margin-top: 20px;
+.contact-container a:hover, .contact-container a:focus {
+    color: #303030;
+    text-decoration: underline;
+}
+
+.contact-container p:last-of-type {
+    color: #666;
+    margin-top: 2.5em;
+    font-style: italic;
+    font-size: 1.2rem;
 }
 
 .social-links ul {
@@ -29,6 +63,9 @@
 
 .social-links li {
     display: inline;
-    margin-right: 10px;
+    margin-right: 15px; 
+    font-size: 1.1rem; 
 }
+
+
 

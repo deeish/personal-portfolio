@@ -3,14 +3,14 @@
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    max-width: 500px; /* Adjust based on your design preferences */
+    max-width: 500px; 
     margin: auto;
 }
 
 input, textarea {
-    margin-bottom: 10px; /* Space between fields */
+    margin-bottom: 10px; 
 }
 
 textarea {
-    min-height: 100px; /* Minimum height for the message box */
+    min-height: 100px; 
 }

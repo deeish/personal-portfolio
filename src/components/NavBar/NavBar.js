@@ -7,7 +7,7 @@ function NavBar() {
     return (
       <div className="navbar-container">
         <div className="logo">
-            <img src="path_to_logo.png" alt="Logo"/>
+            <img src="/images/portpic1.svg" alt="Logo"/>
         </div>
         <div className="navbar-elements">
         <nav>
