@@ -9,7 +9,7 @@ const port = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:3000'  // Ensure this matches the port where your React app is served
+    origin: process.env.CORS_ORIGIN || 'http://localhost:3000'
 }));
 app.use(bodyParser.json());
 
@@ -32,6 +32,14 @@ app.post('/contact', (req, res) => {
     const logEntry = `Time: ${new Date().toISOString()}, FirstName: ${firstName}, LastName: ${lastName}, Email: ${email}, Message: ${message}\n`;
     fs.appendFileSync(logFilePath, logEntry);
     res.json({ status: 'success', message: "Message received successfully!" });
+});
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'build')));
+
+// The "catchall" handler: for any request that doesn't match one above, send back React's index.html file.
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 // Start the server
