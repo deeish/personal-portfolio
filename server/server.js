@@ -9,7 +9,7 @@ const port = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000'
+    origin: ['http://localhost:3000', 'https://dreamy-puffpuff-0f09a0.netlify.app', 'https://dylansalmo.com']
 }));
 app.use(bodyParser.json());
 
