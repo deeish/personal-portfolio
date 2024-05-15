@@ -25,8 +25,8 @@ function ContactForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await axios.post('/api/contact', formData); 
-      setFormData({ firstName: "", lastName: "", email: "", message: "" }); 
+      await axios.post('https://dylan-personal-portfolio.herokuapp.com/contact', formData);
+      setFormData({ firstName: "", lastName: "", email: "", message: "" });
       setSnackbarMessage("Message sent successfully");
       setAlertSeverity("success");
       setOpen(true);
@@ -59,8 +59,8 @@ function ContactForm() {
             display: "flex",
             justifyContent: "space-between",
             flexWrap: "wrap",
-            gap: 2, 
-            width: '100%', 
+            gap: 2,
+            width: '100%',
           }}
         >
           <TextField
@@ -69,7 +69,7 @@ function ContactForm() {
             value={formData.firstName}
             onChange={handleChange}
             required
-            sx={{ width: "calc(50% - 8px)" }}  
+            sx={{ width: "calc(50% - 8px)" }}
           />
           <TextField
             label="Last Name"
@@ -89,7 +89,7 @@ function ContactForm() {
           required
           fullWidth
           margin="normal"
-          sx={{ width: '100%' }} // Full width for alignment
+          sx={{ width: '100%' }}
         />
         <TextField
           label="Message"
@@ -107,10 +107,10 @@ function ContactForm() {
           type="submit"
           variant="contained"
           sx={{
-            mt: 2, // Margin top
-            py: 2, // Padding top and bottom (using shorthand for padding Y-axis)
-            fontSize: '1rem', // Font size
-            width: '15%', // You could also use a specific width like '100%' or '250px'
+            mt: 2,
+            py: 2,
+            fontSize: '1rem',
+            width: '15%',
           }}
         >
           Submit

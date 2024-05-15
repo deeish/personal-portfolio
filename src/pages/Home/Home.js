@@ -12,9 +12,9 @@ function Home() {
         </div>
       </div>
       <div className="info-box-container">
-        <InfoBox
+      <InfoBox
           title="Documents"
-          items={[{ content: "Resume", link: "/path/to/resume.pdf" }]}
+          items={[{ content: "Resume", link: "/resume.pdf" }]} 
         />
         <InfoBox
           title="Work"
