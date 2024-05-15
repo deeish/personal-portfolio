@@ -22,14 +22,11 @@ function ContactForm() {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:3001/contact",
-        formData
-      );
-      setFormData({ firstName: "", lastName: "", email: "", message: "" }); // Clear form
+      await axios.post('/api/contact', formData); 
+      setFormData({ firstName: "", lastName: "", email: "", message: "" }); 
       setSnackbarMessage("Message sent successfully");
       setAlertSeverity("success");
       setOpen(true);
@@ -62,8 +59,8 @@ function ContactForm() {
             display: "flex",
             justifyContent: "space-between",
             flexWrap: "wrap",
-            gap: 2, // Assuming 2 is translated to '16px' based on typical MUI theme spacing values
-            width: '100%', // Ensure the Box uses full width to avoid unexpected wrapping
+            gap: 2, 
+            width: '100%', 
           }}
         >
           <TextField
@@ -72,7 +69,7 @@ function ContactForm() {
             value={formData.firstName}
             onChange={handleChange}
             required
-            sx={{ width: "calc(50% - 8px)" }}  // Adjusts for gap correctly, assuming 16px total gap, 8px per side
+            sx={{ width: "calc(50% - 8px)" }}  
           />
           <TextField
             label="Last Name"
@@ -107,17 +104,17 @@ function ContactForm() {
           sx={{ width: '100%' }}
         />
         <Button
-  type="submit"
-  variant="contained"
-  sx={{
-    mt: 2, // Margin top
-    py: 2, // Padding top and bottom (using shorthand for padding Y-axis)
-    fontSize: '1rem', // Font size
-    width: '15%', // You could also use a specific width like '100%' or '250px'
-  }}
->
-  Submit
-</Button>
+          type="submit"
+          variant="contained"
+          sx={{
+            mt: 2, // Margin top
+            py: 2, // Padding top and bottom (using shorthand for padding Y-axis)
+            fontSize: '1rem', // Font size
+            width: '15%', // You could also use a specific width like '100%' or '250px'
+          }}
+        >
+          Submit
+        </Button>
       </form>
       <p>
         If you prefer, you can also reach me via email directly at <a href="mailto:dylansalmo@gmail.com">dylansalmo@gmail.com</a>.
