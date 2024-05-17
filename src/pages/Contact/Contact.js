@@ -25,7 +25,7 @@ function ContactForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await axios.post('https://dylan-personal-portfolio.herokuapp.com/contact', formData);
+      await axios.post('https://dylan-personal-portfolio-38835e64cae1.herokuapp.com/contact', formData);
       setFormData({ firstName: "", lastName: "", email: "", message: "" });
       setSnackbarMessage("Message sent successfully");
       setAlertSeverity("success");
