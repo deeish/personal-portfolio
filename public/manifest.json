@@ -5,7 +5,7 @@
     {
       "src": "favicon.ico",
       "sizes": "64x64 60x60 48x48 32x32 24x24 16x16",
-      "type": "image/svg+xml"
+      "type": "image/x-icon"
     },
     {
       "src": "AppIcon192.png",
