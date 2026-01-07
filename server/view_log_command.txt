@@ -1,0 +1,3 @@
+use heroku logs --tail | grep "Received message from"
+
+shows you the logged messages
