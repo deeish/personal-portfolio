@@ -5,36 +5,38 @@ function About() {
   return (
     <div className="about-container">
       {/* Background decorative elements */}
-      <div className="about-bg-shapes">
+      <div className="about-bg-shapes" aria-hidden="true">
         <div className="about-shape about-shape-1"></div>
         <div className="about-shape about-shape-2"></div>
       </div>
 
       {/* Header Section */}
-      <div className="about-header">
-        <h1 className="about-title">
+      <header className="about-header">
+        <h1 className="about-title" id="about-heading">
           <span className="title-line">About</span>
           <span className="title-line title-accent">Me</span>
         </h1>
-        <div className="title-underline"></div>
-      </div>
+        <div className="title-underline" aria-hidden="true"></div>
+      </header>
 
       {/* Main Content */}
-      <div className="about-content">
+      <section className="about-content" aria-labelledby="about-heading">
         {/* Image Section */}
-        <div className="about-image-section">
-          <div className="image-wrapper">
+        <aside className="about-image-section">
+          <figure className="image-wrapper">
             <img 
               src={`${process.env.PUBLIC_URL}/images/Dylan.JPG`} 
-              alt="Dylan Salmo" 
+              alt="Dylan Salmo, software developer" 
               className="about-image"
+              width="400"
+              height="533"
             />
-            <div className="image-accent"></div>
-          </div>
-        </div>
+            <div className="image-accent" aria-hidden="true"></div>
+          </figure>
+        </aside>
 
         {/* Text Content */}
-        <div className="about-text-section">
+        <article className="about-text-section">
           <div className="intro-section">
             <p className="about-intro">
               I'm <strong className="about-highlight">Dylan Salmo</strong>, a software engineer 
@@ -66,8 +68,8 @@ function About() {
               fresh perspectives to my work.
             </p>
           </div>
-        </div>
-      </div>
+        </article>
+      </section>
     </div>
   );
 }

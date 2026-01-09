@@ -7,18 +7,18 @@ function Home() {
   return (
     <div className="home-container">
       {/* Animated background shapes */}
-      <div className="bg-shapes">
+      <div className="bg-shapes" aria-hidden="true">
         <div className="shape shape-1"></div>
         <div className="shape shape-2"></div>
         <div className="shape shape-3"></div>
       </div>
 
       {/* Hero Section */}
-      <div className="hero-section">
+      <section className="hero-section" aria-labelledby="hero-heading">
         <div className="hero-content">
           <div className="hero-text">
-            <div className="greeting">Hey, I'm</div>
-            <h1 className="hero-name">
+            <p className="greeting" aria-label="Greeting">Hey, I'm</p>
+            <h1 id="hero-heading" className="hero-name">
               <span className="name-line-1">Dylan</span>
               <span className="name-line-2">Salmo</span>
             </h1>
@@ -27,31 +27,34 @@ function Home() {
               and bringing ideas to life through code. Currently exploring the intersection 
               of design and development.
             </p>
-            <div className="hero-cta">
-              <Link to="/projects" className="cta-button cta-primary">
+            <nav className="hero-cta" aria-label="Primary navigation actions">
+              <Link to="/projects" className="cta-button cta-primary" aria-label="View my projects">
                 View My Work
               </Link>
-              <Link to="/contact" className="cta-button cta-secondary">
+              <Link to="/contact" className="cta-button cta-secondary" aria-label="Get in touch with me">
                 Get In Touch
               </Link>
-            </div>
+            </nav>
           </div>
           <div className="hero-visual">
-            <div className="profile-frame">
+            <figure className="profile-frame">
               <img 
                 src={`${process.env.PUBLIC_URL}/images/Dylan.JPG`} 
-                alt="Dylan Salmo" 
+                alt="Dylan Salmo, software developer" 
                 className="profile-image"
+                width="400"
+                height="533"
+                loading="eager"
               />
-              <div className="profile-accent"></div>
-            </div>
+              <div className="profile-accent" aria-hidden="true"></div>
+            </figure>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Quick Links Section */}
-      <div className="quick-links-section">
-        <h2 className="section-title">Quick Links</h2>
+      <section className="quick-links-section" aria-labelledby="quick-links-heading">
+        <h2 id="quick-links-heading" className="section-title">Quick Links</h2>
         <div className="info-box-container">
           <InfoBox
             title="Documents"
@@ -78,7 +81,7 @@ function Home() {
             ]}
           />
         </div>
-      </div>
+      </section>
     </div>
   );
 }

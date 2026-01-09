@@ -11,8 +11,12 @@ function App() {
   return (
     <Router>
       <div className="main-layout">
+        {/* Skip to main content link for accessibility */}
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
         <NavBar />
-        <div className="content">
+        <main id="main-content" className="content" role="main">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
@@ -20,7 +24,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-        </div>
+        </main>
       </div>
     </Router>
   );

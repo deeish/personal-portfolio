@@ -17,13 +17,12 @@ function NavBar() {
     ];
     
     return (
-      <div className="navbar-container">
-        <div className="logo">
-            <img src="/images/DS_logo_kit/DS_icon_white_transparent_64.png" alt="Dylan Salmo Logo"/>
-        </div>
+      <nav className="navbar-container" role="navigation" aria-label="Main navigation">
+        <a href="/" className="logo" aria-label="Dylan Salmo - Home">
+            <img src="/images/DS_logo_kit/DS_icon_white_transparent_64.png" alt="Dylan Salmo Logo" width="64" height="64"/>
+        </a>
         <div className="navbar-elements">
-        <nav>
-        <ul>
+          <ul>
             {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = location.pathname === item.path;
@@ -32,17 +31,18 @@ function NavBar() {
                       <Link 
                         to={item.path} 
                         className={isActive ? 'active' : ''}
+                        aria-current={isActive ? 'page' : undefined}
+                        aria-label={`Navigate to ${item.label} page`}
                       >
-                        <Icon className="nav-icon" />
+                        <Icon className="nav-icon" aria-hidden="true" />
                         <span className="nav-label">{item.label}</span>
                       </Link>
                     </li>
                 );
             })}
           </ul>
-        </nav>
         </div>
-      </div>
+      </nav>
     );
   }
 

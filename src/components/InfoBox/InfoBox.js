@@ -7,7 +7,7 @@ import XIcon from "@mui/icons-material/X";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import "./InfoBox.css";
 
-export default function BoxSystemProps({ title, items }) {
+export default function InfoBox({ title, items }) {
   const getIcon = (name) => {
     const iconStyle = { fontSize: '1.8rem' }; 
     switch (name.toLowerCase()) {
@@ -33,22 +33,25 @@ export default function BoxSystemProps({ title, items }) {
         <h3 className="link-card-title">{title}</h3>
       </div>
       <div className="link-card-content">
-        {items.map((item, index) => {
+        {items.map((item) => {
           const isExternal = item.link.startsWith('http') || item.link.endsWith('.pdf');
+          // Use link as key since it's unique
+          const itemKey = `${item.content}-${item.link}`;
           
           return (
             <a
-              key={index}
+              key={itemKey}
               href={item.link}
               target={isExternal ? "_blank" : "_self"}
               rel={isExternal ? "noopener noreferrer" : ""}
               className="link-item"
+              aria-label={`${item.content}${isExternal ? ' (opens in new tab)' : ''}`}
             >
-              <div className="link-icon-wrapper">
+              <div className="link-icon-wrapper" aria-hidden="true">
                 {getIcon(item.content.toLowerCase())}
               </div>
               <span className="link-text">{item.content}</span>
-              <ArrowForwardIcon className="link-arrow" />
+              <ArrowForwardIcon className="link-arrow" aria-hidden="true" />
             </a>
           );
         })}

@@ -1,56 +1,82 @@
 # Dylan Salmo's Portfolio
 
-This is the source code for Dylan Salmo's personal portfolio.
+A modern, responsive portfolio website showcasing my projects and skills as a software developer.
 
 ## Features
 
-- Home
-- About
-- Contact Form
+- **Home Page**: Hero section with introduction and quick links to social profiles
+- **About Page**: Personal background, skills, and interests
+- **Projects Page**: Showcase of featured projects with descriptions, technologies, and links
+- **Contact Page**: Functional contact form with EmailJS integration
 
 ## Technologies Used
 
-- React
-- Express
-- Node.js
-- Heroku (Backend)
-- Netlify (Frontend)
+- **Frontend**: React 18, React Router, Custom CSS
+- **UI Components**: Material-UI (for notifications only)
+- **Email Service**: EmailJS (free alternative to backend hosting)
+- **Deployment**: Netlify (Frontend)
 
 ## Setup
 
 ### Prerequisites
 
-- Node.js and npm installed on your machine
+- Node.js (v14 or higher) and npm installed on your machine
 - Git installed on your machine
 
 ### Installation
 
 1. Clone the repository:
-
 ```bash
 git clone https://github.com/deeish/personal-portfolio.git
-
-Navigate to the project directory:
-bash
-Copy code
 cd personal-portfolio
-Install dependencies for the frontend:
-bash
-Copy code
-npm install
-Install dependencies for the backend:
-bash
-Copy code
-cd server
-npm install
-cd ..
-Running Locally
-To run both the frontend and backend locally, use the following command:
+```
 
-bash
-Copy code
-npm run dev
-This will start both the React development server and the Express server.
+2. Install dependencies:
+```bash
+npm install
+```
 
-Open http://localhost:3000 to view the frontend in your browser.
-The backend server will be running on http://localhost:3001.
+3. Set up EmailJS for contact form (optional but recommended):
+   - Sign up for a free account at [EmailJS](https://www.emailjs.com/)
+   - Create an email service (Gmail, Outlook, etc.)
+   - Create an email template with variables: `{{from_name}}`, `{{from_email}}`, `{{message}}`
+   - Get your Public Key from Account > API Keys
+   - Create a `.env` file in the root directory:
+   ```env
+   REACT_APP_EMAILJS_SERVICE_ID=your_service_id
+   REACT_APP_EMAILJS_TEMPLATE_ID=your_template_id
+   REACT_APP_EMAILJS_PUBLIC_KEY=your_public_key
+   ```
+
+4. Run the development server:
+```bash
+npm start
+```
+
+The app will open at [http://localhost:3000](http://localhost:3000)
+
+### Building for Production
+
+```bash
+npm run build
+```
+
+This creates an optimized production build in the `build` folder.
+
+## Project Structure
+
+```
+src/
+├── components/     # Reusable components (NavBar, InfoBox)
+├── pages/          # Page components (Home, About, Projects, Contact)
+├── config/         # Configuration files (project URLs, etc.)
+└── App.js          # Main app component with routing
+```
+
+## Configuration
+
+Project-specific URLs and links are configured in `src/config/projects.js` for easy updates.
+
+## License
+
+ISC
