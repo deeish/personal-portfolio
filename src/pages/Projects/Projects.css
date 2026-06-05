@@ -382,7 +382,7 @@
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
   gap: 40px;
   animation: fadeInUp 0.8s ease-out 0.4s both;
 }

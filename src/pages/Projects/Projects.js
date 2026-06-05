@@ -113,6 +113,129 @@ function Projects() {
 
       {/* Other Projects Grid */}
       <section className="projects-grid" aria-label="Additional projects">
+
+        {/* Jim-App */}
+        <article className="project-card">
+          <div className="project-header">
+            <h2 className="project-name">Jim App</h2>
+          </div>
+          <p className="project-tagline">AI-Powered Mobile Gym Planner</p>
+          <p className="project-description">
+            A full-stack mobile application for planning and logging gym workouts. Features
+            AI-generated workout plans via Groq LLM with a rule-based fallback, an exercise
+            catalog, and weekly planning. Built with a React Native/Expo frontend and a NestJS
+            backend backed by PostgreSQL and Supabase authentication.
+          </p>
+
+          <div className="project-details-compact">
+            <div className="project-features-compact">
+              <h3 className="details-heading">Key Features</h3>
+              <ul className="features-list">
+                <li>AI-generated workout plans powered by Groq LLM</li>
+                <li>Weekly workout planning and session logging</li>
+                <li>Exercise catalog with search and saved exercises</li>
+                <li>Workout history and progress tracking</li>
+                <li>Supabase authentication and user profiles</li>
+                <li>REST API with rate limiting and structured logging</li>
+              </ul>
+            </div>
+
+            <div className="project-tech">
+              <h3 className="details-heading">Technologies</h3>
+              <div className="tech-badges">
+                <span className="tech-badge">TypeScript</span>
+                <span className="tech-badge">React Native</span>
+                <span className="tech-badge">NestJS</span>
+                <span className="tech-badge">PostgreSQL</span>
+                <span className="tech-badge">Supabase</span>
+                <span className="tech-badge">Groq AI</span>
+              </div>
+            </div>
+
+            <div className="project-links">
+              <a
+                href="https://github.com/deeish/Jim-App"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="project-link"
+                aria-label="View Jim App project on GitHub (opens in new tab)"
+              >
+                <svg className="link-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                View on GitHub
+              </a>
+            </div>
+          </div>
+        </article>
+
+        {/* Tichu */}
+        <article className="project-card">
+          <div className="project-header">
+            <h2 className="project-name">Tichu</h2>
+          </div>
+          <p className="project-tagline">Real-Time Multiplayer Card Game</p>
+          <p className="project-description">
+            A web implementation of Tichu, a 4-player partnership trick-taking card game.
+            Features real-time multiplayer via Socket.IO with game rooms, chat, full game
+            logic (Grand Tichu declarations, card exchanges, special cards), and a token-based
+            reconnection system. Deployed and fully playable.
+          </p>
+
+          <div className="project-details-compact">
+            <div className="project-features-compact">
+              <h3 className="details-heading">Key Features</h3>
+              <ul className="features-list">
+                <li>Real-time multiplayer game rooms via Socket.IO</li>
+                <li>Complete Tichu rules (Grand Tichu, card exchanges, special cards)</li>
+                <li>Team scoring and partnership mechanics</li>
+                <li>In-game chat and player panels</li>
+                <li>Token-based reconnection for dropped connections</li>
+                <li>Mobile and desktop responsive with touch support</li>
+              </ul>
+            </div>
+
+            <div className="project-tech">
+              <h3 className="details-heading">Technologies</h3>
+              <div className="tech-badges">
+                <span className="tech-badge">JavaScript</span>
+                <span className="tech-badge">React</span>
+                <span className="tech-badge">Node.js</span>
+                <span className="tech-badge">Socket.IO</span>
+                <span className="tech-badge">Redis</span>
+              </div>
+            </div>
+
+            <div className="project-links">
+              <a
+                href="https://calltichu.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="project-link"
+                aria-label="Play Tichu live demo (opens in new tab)"
+              >
+                <svg className="link-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+                </svg>
+                Live Demo
+              </a>
+              <a
+                href="https://github.com/deeish/Tichu"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="project-link"
+                aria-label="View Tichu project on GitHub (opens in new tab)"
+              >
+                <svg className="link-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                View on GitHub
+              </a>
+            </div>
+          </div>
+        </article>
+
+        {/* Checkm8 */}
         <article className="project-card">
           <div className="project-header">
             <h2 className="project-name">Checkm8</h2>
