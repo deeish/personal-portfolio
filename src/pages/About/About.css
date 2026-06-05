@@ -289,6 +289,263 @@
   }
 }
 
+/* ── Full-width sections (Education, Experience, Skills) ── */
+.about-extra-section {
+  position: relative;
+  z-index: 1;
+  margin-top: 60px;
+  animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+.extra-section-heading {
+  font-family: 'Roboto', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #053742;
+  margin: 0 0 30px 0;
+  padding-left: 20px;
+  position: relative;
+  letter-spacing: -0.5px;
+}
+
+.extra-section-heading::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 80%;
+  background: linear-gradient(180deg, #053742 0%, #2a3eb1 100%);
+  border-radius: 3px;
+}
+
+/* Education */
+.education-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 30px 35px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  border-top: 4px solid transparent;
+  border-image: linear-gradient(90deg, #053742, #2a3eb1) 1;
+}
+
+.edu-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.edu-school {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #053742;
+  margin: 0 0 4px 0;
+}
+
+.edu-degree {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.05rem;
+  color: #2a3eb1;
+  font-weight: 500;
+  font-style: italic;
+  margin: 0;
+}
+
+.edu-date {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, #053742, #2a3eb1);
+  padding: 6px 14px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.edu-coursework {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #555;
+  margin: 0;
+}
+
+/* Experience */
+.experience-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.experience-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 30px 35px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.experience-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #053742, #2a3eb1);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.experience-card:hover::before {
+  transform: scaleX(1);
+}
+
+.experience-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+.exp-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.exp-company {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #053742;
+  margin: 0 0 2px 0;
+}
+
+.exp-location {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.9rem;
+  color: #888;
+  margin: 0;
+}
+
+.exp-date {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, #053742, #2a3eb1);
+  padding: 6px 14px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.exp-role {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2a3eb1;
+  font-style: italic;
+  margin: 0 0 16px 0;
+}
+
+.exp-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.exp-bullets li {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.97rem;
+  line-height: 1.7;
+  color: #444;
+  padding-left: 20px;
+  position: relative;
+}
+
+.exp-bullets li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: #2a3eb1;
+  font-size: 0.85rem;
+  top: 2px;
+}
+
+/* Skills */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.skill-group {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 22px 24px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+  transition: transform 0.3s ease;
+}
+
+.skill-group:hover {
+  transform: translateY(-3px);
+}
+
+.skill-group-label {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #2a3eb1;
+  margin: 0 0 14px 0;
+}
+
+.skill-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-badge {
+  background: linear-gradient(135deg, rgba(5, 55, 66, 0.08) 0%, rgba(42, 62, 177, 0.08) 100%);
+  color: #053742;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: 'Roboto', sans-serif;
+  border: 1px solid rgba(5, 55, 66, 0.15);
+  transition: all 0.25s ease;
+}
+
+.skill-badge:hover {
+  background: linear-gradient(135deg, #053742, #2a3eb1);
+  color: #ffffff;
+  border-color: transparent;
+  transform: translateY(-1px);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
   .about-content {
@@ -351,5 +608,40 @@
 
   .content-section:hover {
     padding-left: 5px;
+  }
+
+  .about-extra-section {
+    margin-top: 40px;
+  }
+
+  .extra-section-heading {
+    font-size: 1.6rem;
+  }
+
+  .education-card,
+  .experience-card {
+    padding: 22px 20px;
+  }
+
+  .edu-header,
+  .exp-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .edu-date,
+  .exp-date {
+    align-self: flex-start;
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .skills-grid {
+    grid-template-columns: 1fr;
   }
 }
