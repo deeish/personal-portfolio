@@ -24,8 +24,8 @@ function Home() {
             </h1>
             <p className="hero-intro">
               A creative software engineer passionate about crafting elegant solutions 
-              and bringing ideas to life through code. Currently exploring the intersection 
-              of design and development.
+              and bringing ideas to life through code. I build full-stack applications and adapt fast.
+              Whatever the role needs, I'm ready to learn it.
             </p>
             <nav className="hero-cta" aria-label="Primary navigation actions">
               <Link to="/projects" className="cta-button cta-primary" aria-label="View my projects">
