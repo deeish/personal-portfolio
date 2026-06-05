@@ -351,24 +351,24 @@
     .hero-section {
         padding: 30px 15px 30px;
     }
-    
+
     .quick-links-section {
         padding: 30px 15px 50px;
     }
-    
+
     .name-line-1,
     .name-line-2 {
         font-size: 2.5rem;
     }
-    
+
     .greeting {
         font-size: 1rem;
     }
-    
+
     .hero-intro {
         font-size: 0.95rem;
     }
-    
+
     .section-title {
         font-size: 1.75rem;
         margin-bottom: 30px;
@@ -376,5 +376,9 @@
 
     .info-box-container {
         gap: 15px;
+    }
+
+    .hero-visual {
+        max-width: 160px;
     }
 }

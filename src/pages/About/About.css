@@ -642,6 +642,38 @@
 
 @media (max-width: 480px) {
   .skills-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .about-extra-section {
+    margin-top: 30px;
+  }
+
+  .education-card,
+  .experience-card {
+    padding: 16px;
+  }
+
+  .edu-coursework {
+    font-size: 0.85rem;
+  }
+
+  .exp-bullets li {
+    font-size: 0.9rem;
+  }
+
+  .skill-group {
+    padding: 14px 16px;
+  }
+
+  .intro-section {
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+
+  .content-section {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
   }
 }
