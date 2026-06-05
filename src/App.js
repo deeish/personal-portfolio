@@ -11,10 +11,6 @@ function App() {
   return (
     <Router>
       <div className="main-layout">
-        {/* Skip to main content link for accessibility */}
-        <a href="#main-content" className="skip-link">
-          Skip to main content
-        </a>
         <NavBar />
         <main id="main-content" className="content" role="main">
           <Routes>
