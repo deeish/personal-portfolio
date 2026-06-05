@@ -200,7 +200,6 @@
     }
 
     .nav-label {
-        font-size: 0.55rem;
-        letter-spacing: 0.5px;
+        display: none;
     }
 }
