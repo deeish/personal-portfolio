@@ -119,6 +119,12 @@
   border-top: 1px solid var(--frost-line);
 }
 
+/* Keeps jumped-to headings clear of the sticky bar. */
+.simple__section,
+.simple__project {
+  scroll-margin-top: 72px;
+}
+
 .simple__heading {
   margin: 0 0 22px;
   font-family: var(--font-display);

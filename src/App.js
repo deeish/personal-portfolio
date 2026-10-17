@@ -14,21 +14,27 @@ function Portfolio() {
   const location = useLocation();
   const navigate = useNavigate();
   const [unsupported, setUnsupported] = useState(false);
+  // The section a visitor was on when they left the run, so the simple page opens there too.
+  const [section, setSection] = useState(null);
   const requested = new URLSearchParams(location.search).get("view");
   let view = requested === "run" || requested === "simple" ? requested : prefersReducedMotion() ? "simple" : "run";
   if (unsupported) view = "simple";
 
   const show = useCallback(
-    (next) => {
-      window.scrollTo(0, 0);
+    (next, fromSection = null) => {
+      setSection(fromSection);
+      if (!fromSection) window.scrollTo(0, 0);
       navigate({ pathname: location.pathname, search: `?view=${next}` });
     },
     [navigate, location.pathname]
   );
-  const showSimple = useCallback(() => show("simple"), [show]);
-  const markUnsupported = useCallback(() => setUnsupported(true), []);
+  const showSimple = useCallback((fromSection) => show("simple", fromSection), [show]);
+  const markUnsupported = useCallback((fromSection) => {
+    setSection(fromSection || null);
+    setUnsupported(true);
+  }, []);
 
-  if (view === "simple") return <SimpleView canRun={!unsupported} onRun={() => show("run")} />;
+  if (view === "simple") return <SimpleView canRun={!unsupported} onRun={() => show("run")} section={section} />;
   return (
     <Suspense fallback={<div className="boot" aria-hidden="true" />}>
       <Descent onSimple={showSimple} onUnsupported={markUnsupported} />

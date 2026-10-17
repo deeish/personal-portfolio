@@ -189,14 +189,17 @@ const breathe = () => new Promise((resolve) => setTimeout(resolve, 0));
 const PAGE_CONTROLS = 'a, button, input, textarea, select, summary, label, .card, .hud-top, .hud-rail';
 // How close to the sun a click has to land (about 3.5 degrees).
 const SUN_CLICK_COS = Math.cos(THREE.MathUtils.degToRad(3.5));
+// Resolution ceiling at each quality step; quality drops a step when frames run slow.
+const QUALITY_PIXEL_RATIO = [Infinity, 1.25, 1.0, 0.8];
 
 export class SceneCancelled extends Error {}
 
-// Usage: construct (throws without WebGL), await build() (throws SceneCancelled if
-// disposed part-way), then start(). The build runs in small steps so the page stays
-// responsive and the loader can show real progress.
+// Usage: construct into a host element (throws without WebGL), await build() (throws
+// SceneCancelled if disposed part-way), then start(). The build runs in small steps so the
+// page stays responsive and the loader can show real progress. Each scene draws into its
+// own canvas, removed on dispose: a canvas whose GPU context has been released can't be reused.
 export default class MountainScene {
-  constructor(canvas, options = {}) {
+  constructor(host, options = {}) {
     const { mobile = false, reducedMotion = false, iceIcons = [], nameElement = null } = options;
     this.mobile = mobile;
     this.reducedMotion = reducedMotion;
@@ -207,9 +210,29 @@ export default class MountainScene {
     this.onProgress = options.onProgress || (() => {});
     this.emit = (name, detail) => this.onEvent(name, detail);
 
+    const canvas = document.createElement('canvas');
+    canvas.className = 'descent__canvas';
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
-    this.pixelRatio = Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 1.75);
+    host.appendChild(canvas);
+    this.quality = 0;
+    this.pixelRatio = this.targetPixelRatio();
     renderer.setPixelRatio(this.pixelRatio);
+    // Phones drop the GPU context for background tabs and usually hand it back. Wait for
+    // that (three.js rebuilds its resources on restore); only if it stays gone while the
+    // page is actually on screen, hand over to the simple page.
+    this.canvas = canvas;
+    this.handleContextLost = (event) => {
+      event.preventDefault();
+      const giveUp = () => {
+        if (document.hidden) this.contextTimer = setTimeout(giveUp, 2000);
+        else this.emit('unsupported');
+      };
+      clearTimeout(this.contextTimer);
+      this.contextTimer = setTimeout(giveUp, 4000);
+    };
+    this.handleContextRestored = () => clearTimeout(this.contextTimer);
+    canvas.addEventListener('webglcontextlost', this.handleContextLost);
+    canvas.addEventListener('webglcontextrestored', this.handleContextRestored);
     renderer.toneMapping = THREE.NeutralToneMapping;
     renderer.toneMappingExposure = 1.05;
     this.renderer = renderer;
@@ -236,10 +259,10 @@ export default class MountainScene {
     this.camVel = new THREE.Vector3();
     this.timer = new THREE.Timer();
     this.lastTelemetry = 0;
-    this.quality = 0;
-    this.perf = { time: 0, frames: 0 };
+    this.perf = { time: 0, frames: 0, slowWindows: 0 };
     this.raycaster = new THREE.Raycaster();
     this.clickables = [];
+    this.treeSpots = [];
     this.sunTarget = { userData: { onClick: () => this.emit('toggle-night') } };
     this.hovering = false;
     this.lastHover = 0;
@@ -290,9 +313,15 @@ export default class MountainScene {
     this.handleResize = () => this.resize();
     this.handlePointer = (event) => this.pointerMoved(event);
     this.handleClick = (event) => this.clicked(event);
+    this.handlePointerOut = () => {
+      this.hovering = false;
+      document.body.style.cursor = '';
+    };
     window.addEventListener('resize', this.handleResize);
     window.addEventListener('pointermove', this.handlePointer, { passive: true });
     window.addEventListener('click', this.handleClick);
+    window.addEventListener('blur', this.handlePointerOut);
+    document.documentElement.addEventListener('pointerleave', this.handlePointerOut);
     this.resize();
     this.frame = this.frame.bind(this);
     this.raf = requestAnimationFrame(this.frame);
@@ -529,12 +558,15 @@ export default class MountainScene {
       if (z > CAMERA_END - 70 && u > -80 && u < 24) continue;
 
       const scale = 0.6 + rand();
+      const height = scale * (0.85 + rand() * 0.4);
       dummy.position.set(x, y - 0.6, z);
       dummy.rotation.set(0, rand() * Math.PI * 2, 0);
-      dummy.scale.set(scale, scale * (0.85 + rand() * 0.4), scale);
+      dummy.scale.set(scale, height, scale);
       dummy.updateMatrix();
       mesh.setMatrixAt(placed, dummy.matrix);
       mesh.setColorAt(placed, tmpColor.copy(tint).lerp(shadowTint, rand()));
+      // The front rows of trees are where wildlife hides.
+      if (Math.abs(u) < 90) this.treeSpots.push({ x, y, z, u, scale, height });
       placed++;
     }
     mesh.count = placed;
@@ -645,7 +677,7 @@ export default class MountainScene {
     this.snow = new Snowfall({ ...context, pixelRatio: this.pixelRatio });
     this.skis = new SkiRig({ ...context, camera: this.camera, renderer: this.renderer });
     this.ice = new IceBlocks({ ...context, icons: this.iceIcons });
-    this.wildlife = new Wildlife(context);
+    this.wildlife = new Wildlife({ ...context, treeSpots: this.treeSpots });
     this.avalanche = new Avalanche(context);
     this.clickables = [...this.ice.clickables, ...this.wildlife.clickables, ...this.avalanche.clickables];
   }
@@ -661,6 +693,13 @@ export default class MountainScene {
       this.nameResizeTimer = setTimeout(() => this.snowName && this.snowName.sample(), 200);
     };
     window.addEventListener('resize', this.handleNameResize);
+    // If the heading font was still downloading, redraw the name once it lands.
+    if (document.fonts && document.fonts.status !== 'loaded' && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        if (this.disposed || !this.snowName) return;
+        this.snowName.sample().then((sampled) => sampled && !this.disposed && this.emit('name-ready'));
+      });
+    }
   }
 
   // ---------- Interaction ----------
@@ -673,15 +712,30 @@ export default class MountainScene {
     for (const hit of hits) {
       let shown = true;
       for (let o = hit.object; o; o = o.parent) if (!o.visible) shown = false;
-      if (!shown) continue;
+      if (!shown || !this.inView(hit.point)) continue;
       let target = hit.object;
       while (target && !target.userData.onClick) target = target.parent;
-      if (target) return target;
+      // Some things are briefly inert (a sign cooling down); they shouldn't offer a click.
+      if (target && (!target.userData.enabled || target.userData.enabled())) return target;
     }
     // The sun (or the moon, after dark) is clickable from above the clouds: it switches night on and off.
     const aboveClouds = this.camera.position.y > CLOUD_Y + 20;
     if (aboveClouds && this.raycaster.ray.direction.dot(this.sunDir) > SUN_CLICK_COS) return this.sunTarget;
     return null;
+  }
+
+  // Whether a point can actually be seen: not under the cloud deck when you're above it,
+  // and not behind a ridge (checked by stepping along the line of sight).
+  inView(point) {
+    const from = this.camera.position;
+    if (from.y > CLOUD_Y && point.y < CLOUD_Y - 5) return false;
+    for (let i = 1; i < 22; i++) {
+      const t = (i / 22) * 0.9;
+      const x = from.x + (point.x - from.x) * t;
+      const z = from.z + (point.z - from.z) * t;
+      if (heightAt(x, z) > from.y + (point.y - from.y) * t + 0.5) return false;
+    }
+    return true;
   }
 
   pointerMoved(event) {
@@ -705,9 +759,15 @@ export default class MountainScene {
 
   // ---------- Per frame ----------
 
+  // Follows browser zoom and moves between screens, within the current quality step.
+  targetPixelRatio() {
+    return Math.min(window.devicePixelRatio || 1, this.mobile ? 1.5 : 1.75, QUALITY_PIXEL_RATIO[this.quality]);
+  }
+
   resize() {
     const width = window.innerWidth;
     const height = window.innerHeight;
+    this.pixelRatio = this.targetPixelRatio();
     this.renderer.setPixelRatio(this.pixelRatio);
     this.renderer.setSize(width, height, false);
     this.camera.aspect = width / height;
@@ -718,21 +778,35 @@ export default class MountainScene {
     if (this.snow) this.snow.setPixelRatio(this.pixelRatio, buffer);
     if (this.skis) this.skis.setScale(buffer.y, this.baseFov);
     if (this.avalanche) this.avalanche.setScale(buffer.y, this.baseFov);
+    if (this.wildlife) this.wildlife.setScale(buffer.y, this.baseFov);
     if (this.snowName) this.snowName.resize(width, height, this.pixelRatio);
   }
 
-  // Watch the frame rate and step quality down on devices that are struggling.
+  // Watch the frame rate and step quality down on devices that are struggling. If even
+  // the lowest step can't keep up (software rendering, very old GPUs), ask for the simple page.
   trackPerformance(rawDt, time) {
-    if (rawDt > 0.25 || time < 4 || this.quality >= 3) return;
+    // Long gaps are a backgrounded tab or a hitch, not the steady frame rate.
+    if (rawDt > 0.5 || time < 4) return;
     this.perf.time += rawDt;
     this.perf.frames += 1;
     if (this.perf.time < 2) return;
     const average = this.perf.time / this.perf.frames;
     this.perf.time = 0;
     this.perf.frames = 0;
-    if (average <= 1 / 40) return;
+    // Struggling means under ~26fps, or well below the best this device has managed. A steady
+    // 30fps from a battery-saver frame cap is not struggling, so it keeps full quality.
+    this.perf.best = Math.min(this.perf.best || Infinity, average);
+    const slow = average > 1 / 26 || (average > 1 / 40 && average > this.perf.best * 1.3);
+    if (!slow) {
+      this.perf.slowWindows = 0;
+      return;
+    }
+    if (this.quality >= 3) {
+      if (average > 1 / 18) this.perf.slowWindows += 1;
+      if (this.perf.slowWindows >= 2) this.emit('unsupported');
+      return;
+    }
     this.quality += 1;
-    this.pixelRatio = Math.min(this.pixelRatio, [1.75, 1.25, 1.0, 0.8][this.quality]);
     if (this.quality >= 2) {
       this.snow.setDensity(0.55);
       this.skis.sprayEnabled = false;
@@ -786,9 +860,11 @@ export default class MountainScene {
     this.lookTarget.set(aheadX, heightAt(aheadX, aheadZ) + EYE * 0.5, aheadZ);
     this.vista.set(x, cam.position.y - 70, z + 900);
     this.lookTarget.lerp(this.vista, intro);
+    // Only a slight sway toward the pointer: enough to feel alive, not so much that
+    // clickable things slide away from the cursor.
     this.smoothPointer.lerp(this.pointer, 1 - Math.exp(-dt * 3));
-    this.lookTarget.x -= this.smoothPointer.x * 6;
-    this.lookTarget.y += this.smoothPointer.y * 3;
+    this.lookTarget.x -= this.smoothPointer.x * 2;
+    this.lookTarget.y += this.smoothPointer.y * 1;
     cam.lookAt(this.lookTarget);
 
     // Lean into each turn the way a skier banks on edge.
@@ -806,6 +882,8 @@ export default class MountainScene {
       dt, time, z, prevZ, progress: p, speed: this.speed, signedSpeed: this.signedSpeed,
       turn, camVel: this.camVel, camera: cam, night, reducedMotion: this.reducedMotion,
       autopilot: performance.now() < (this.autopilotUntil || 0),
+      // Unsmoothed, for one-frame checks like passing a sign.
+      instantSpeed: Math.abs(rawSpeed),
     };
     this.avalanche.update(frame);
     this.wildlife.update(frame);
@@ -874,10 +952,15 @@ export default class MountainScene {
       window.removeEventListener('resize', this.handleResize);
       window.removeEventListener('pointermove', this.handlePointer);
       window.removeEventListener('click', this.handleClick);
+      window.removeEventListener('blur', this.handlePointerOut);
+      document.documentElement.removeEventListener('pointerleave', this.handlePointerOut);
     }
+    clearTimeout(this.contextTimer);
+    this.canvas.removeEventListener('webglcontextlost', this.handleContextLost);
+    this.canvas.removeEventListener('webglcontextrestored', this.handleContextRestored);
     if (this.handleNameResize) window.removeEventListener('resize', this.handleNameResize);
     document.body.style.cursor = '';
-    [this.skis, this.avalanche, this.snowName].forEach((feature) => feature && feature.dispose());
+    [this.skis, this.avalanche, this.wildlife, this.snowName].forEach((feature) => feature && feature.dispose());
     this.scene.traverse((object) => {
       if (object.geometry) object.geometry.dispose();
       if (object.material) [].concat(object.material).forEach((material) => {
@@ -887,5 +970,9 @@ export default class MountainScene {
     });
     if (this.groundTexture) this.groundTexture.dispose();
     this.renderer.dispose();
+    // Release the GPU context now rather than at garbage collection, so switching between
+    // the run and the simple page doesn't pile up contexts (browsers cap how many can live).
+    this.renderer.forceContextLoss();
+    this.canvas.remove();
   }
 }

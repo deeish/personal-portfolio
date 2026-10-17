@@ -15,14 +15,16 @@ function Section({ id, title, children }) {
 
 // The whole portfolio on one plain page: no 3D, no motion. Shown on request,
 // to visitors who prefer reduced motion, and wherever WebGL isn't available.
-export default function SimpleView({ canRun, onRun }) {
+export default function SimpleView({ canRun, onRun, section }) {
   const location = useLocation();
 
+  // Open on the section the visitor came from (or an old page URL), otherwise at the top.
   useEffect(() => {
-    const target = ROUTE_TARGETS[location.pathname];
+    const target = section && section !== 'summit' ? section : ROUTE_TARGETS[location.pathname];
     const el = target && document.getElementById(target);
     if (el) el.scrollIntoView();
-  }, [location.pathname]);
+    else window.scrollTo(0, 0);
+  }, [section, location.pathname]);
 
   return (
     <div className="simple">

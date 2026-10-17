@@ -1,7 +1,35 @@
 import React, { useRef, useState } from 'react';
 import emailjs from '@emailjs/browser';
 
-const EMPTY_FORM = { firstName: '', lastName: '', email: '', message: '', website: '' };
+// `hpExtra` is the honeypot: hidden from people, filled in by bots. Its name is deliberately
+// one that browsers and password managers won't recognise and autofill.
+const EMPTY_FORM = { firstName: '', lastName: '', email: '', message: '', hpExtra: '' };
+const STORAGE_KEY = 'contactFormSubmissions';
+const ONE_HOUR = 60 * 60 * 1000;
+const MAX_PER_HOUR = 3;
+
+// Submissions in the last hour, or null. Storage can be blocked (private browsing)
+// or hold junk; both count as "no history" rather than breaking the form.
+function readSubmissions() {
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const saved = raw ? JSON.parse(raw) : null;
+    if (saved && Number.isFinite(saved.count) && Number.isFinite(saved.timestamp) && Date.now() - saved.timestamp < ONE_HOUR) {
+      return saved;
+    }
+  } catch (error) {
+    // Fall through to "no history".
+  }
+  return null;
+}
+
+function writeSubmissions(value) {
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(value));
+  } catch (error) {
+    // Without storage the limit only lasts for this page view.
+  }
+}
 
 function ContactForm() {
   const [formData, setFormData] = useState(EMPTY_FORM);
@@ -9,46 +37,16 @@ function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
   const formStartTime = useRef(Date.now());
-  const lastSubmissionTime = useRef(null);
 
-  // Rate limiting: Check if user can submit (max 3 submissions per hour)
+  // Rate limiting: at most three messages an hour, remembered across reloads.
   const canSubmit = () => {
-    const now = Date.now();
-    const oneHour = 60 * 60 * 1000;
-
-    if (lastSubmissionTime.current === null) {
-      return true;
-    }
-
-    const submissionData = localStorage.getItem('contactFormSubmissions');
-    if (submissionData) {
-      const { count, timestamp } = JSON.parse(submissionData);
-      if (now - timestamp > oneHour) {
-        localStorage.removeItem('contactFormSubmissions');
-        return true;
-      }
-      if (count >= 3) {
-        return false;
-      }
-    }
-
-    return true;
+    const saved = readSubmissions();
+    return !saved || saved.count < MAX_PER_HOUR;
   };
 
   const recordSubmission = () => {
-    const now = Date.now();
-    const oneHour = 60 * 60 * 1000;
-    const submissionData = localStorage.getItem('contactFormSubmissions');
-
-    if (submissionData) {
-      const { count, timestamp } = JSON.parse(submissionData);
-      const next = now - timestamp < oneHour ? { count: count + 1, timestamp } : { count: 1, timestamp: now };
-      localStorage.setItem('contactFormSubmissions', JSON.stringify(next));
-    } else {
-      localStorage.setItem('contactFormSubmissions', JSON.stringify({ count: 1, timestamp: now }));
-    }
-
-    lastSubmissionTime.current = now;
+    const saved = readSubmissions();
+    writeSubmissions(saved ? { count: saved.count + 1, timestamp: saved.timestamp } : { count: 1, timestamp: Date.now() });
   };
 
   const validateForm = () => {
@@ -58,12 +56,6 @@ function ContactForm() {
       newErrors.firstName = 'First name is required';
     } else if (formData.firstName.trim().length < 2) {
       newErrors.firstName = 'First name must be at least 2 characters';
-    }
-
-    if (!formData.lastName.trim()) {
-      newErrors.lastName = 'Last name is required';
-    } else if (formData.lastName.trim().length < 2) {
-      newErrors.lastName = 'Last name must be at least 2 characters';
     }
 
     if (!formData.email.trim()) {
@@ -94,7 +86,7 @@ function ContactForm() {
     event.preventDefault();
 
     // 1. Honeypot check - if this field is filled, it's a bot
-    if (formData.website.trim() !== '') {
+    if (formData.hpExtra.trim() !== '') {
       if (process.env.NODE_ENV === 'development') {
         console.warn('Spam detected: Honeypot field was filled');
       }
@@ -141,7 +133,7 @@ function ContactForm() {
           serviceId,
           templateId,
           {
-            from_name: `${formData.firstName} ${formData.lastName}`,
+            from_name: `${formData.firstName} ${formData.lastName}`.trim(),
             from_email: formData.email,
             message: formData.message,
             to_name: 'Dylan Salmo',
@@ -169,11 +161,11 @@ function ContactForm() {
 
   const field = (name, label, props = {}) => {
     const Input = props.multiline ? 'textarea' : 'input';
-    const { multiline, ...inputProps } = props;
+    const { multiline, optional, ...inputProps } = props;
     return (
       <div className="field">
         <label htmlFor={name} className="field__label">
-          {label} <span aria-hidden="true">*</span>
+          {label} {optional ? <span className="field__optional">(optional)</span> : <span aria-hidden="true">*</span>}
         </label>
         <Input
           id={name}
@@ -181,7 +173,7 @@ function ContactForm() {
           value={formData[name]}
           onChange={handleChange}
           className={`field__input${errors[name] ? ' field__input--error' : ''}`}
-          aria-required="true"
+          aria-required={optional ? 'false' : 'true'}
           aria-invalid={errors[name] ? 'true' : 'false'}
           aria-describedby={errors[name] ? `${name}-error` : undefined}
           {...inputProps}
@@ -199,19 +191,19 @@ function ContactForm() {
     <form onSubmit={handleSubmit} className="contact-form" aria-label="Contact form" noValidate>
       <div className="contact-form__row">
         {field('firstName', 'First name', { type: 'text', placeholder: 'John', autoComplete: 'given-name' })}
-        {field('lastName', 'Last name', { type: 'text', placeholder: 'Doe', autoComplete: 'family-name' })}
+        {field('lastName', 'Last name', { type: 'text', placeholder: 'Doe', autoComplete: 'family-name', optional: true })}
       </div>
       {field('email', 'Email', { type: 'email', placeholder: 'john.doe@example.com', autoComplete: 'email' })}
       {field('message', 'Message', { multiline: true, rows: 5, placeholder: 'Tell me about your project or just say hello...' })}
 
       {/* Honeypot field - hidden from users, but bots will fill it */}
       <div className="honeypot-field" aria-hidden="true">
-        <label htmlFor="website">Website (leave blank)</label>
+        <label htmlFor="hpExtra">Leave this field empty</label>
         <input
           type="text"
-          id="website"
-          name="website"
-          value={formData.website}
+          id="hpExtra"
+          name="hpExtra"
+          value={formData.hpExtra}
           onChange={handleChange}
           tabIndex="-1"
           autoComplete="off"

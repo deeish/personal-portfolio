@@ -72,6 +72,17 @@ export const EXPERIENCE = [
       'Integrated front-end views with back-end endpoints to display dynamic content and handle user input reliably.',
     ],
   },
+  {
+    company: 'Diamond International',
+    location: 'Cypress, CA',
+    role: 'Sales Associate & Operations Support',
+    date: '2015 – Present',
+    bullets: [
+      'Handled customer sales and pricing, building long-term relationships with repeat clientele.',
+      'Served as the in-house tech resource, diagnosing and resolving hardware and software issues to keep daily operations running smoothly.',
+      'Supported inventory management, filing, and day-to-day administrative tasks across a small business environment.',
+    ],
+  },
 ];
 
 // `side` is where the card sits on screen; the project's ice block appears on the other

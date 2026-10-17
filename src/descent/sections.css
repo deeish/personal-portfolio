@@ -324,6 +324,11 @@
   color: var(--signal);
 }
 
+.field__label .field__optional {
+  color: var(--ice-2);
+  letter-spacing: 0.1em;
+}
+
 .field__input {
   width: 100%;
   padding: 10px 12px;

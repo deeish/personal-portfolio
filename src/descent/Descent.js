@@ -54,7 +54,7 @@ function Leg({ id, side, index, kicker, title, mark, wide, children }) {
 }
 
 export default function Descent({ onSimple, onUnsupported }) {
-  const canvasRef = useRef(null);
+  const canvasHostRef = useRef(null);
   const nameRef = useRef(null);
   const sceneRef = useRef(null);
   const hudRef = useRef(null);
@@ -67,7 +67,9 @@ export default function Descent({ onSimple, onUnsupported }) {
   const unsupportedRef = useRef(onUnsupported);
   unsupportedRef.current = onUnsupported;
   const nightRef = useRef(false);
+  const activeIdRef = useRef('summit');
   const [status, setStatus] = useState('loading');
+  const [slowLoad, setSlowLoad] = useState(false);
   const [marks, setMarks] = useState({});
   const [activeId, setActiveId] = useState('summit');
   const [nameReady, setNameReady] = useState(false);
@@ -75,12 +77,17 @@ export default function Descent({ onSimple, onUnsupported }) {
   const [flash, setFlash] = useState(0);
   const location = useLocation();
 
-  // Scene events: the snow name is ready, the sun was clicked, or the yeti caught you.
+  // Scene events: the snow name is ready, the sun was clicked, the yeti caught you,
+  // or the 3D run can't carry on (lost GPU, far too slow) and the simple page takes over.
   eventRef.current = (name) => {
     if (name === 'name-ready') setNameReady(true);
     if (name === 'toggle-night') setNight(!nightRef.current);
     if (name === 'yeti-catch') setFlash(Date.now());
+    if (name === 'unsupported') unsupportedRef.current(activeIdRef.current);
   };
+
+  // Switching to the simple page keeps your place.
+  const openSimple = useCallback(() => onSimple(activeIdRef.current), [onSimple]);
 
   const syncScroll = useCallback((immediate = false) => {
     if (sceneRef.current) sceneRef.current.setTarget(window.scrollY / maxScrollRef.current, { immediate });
@@ -107,7 +114,9 @@ export default function Descent({ onSimple, onUnsupported }) {
         side: project.side === 'right' ? 1 : -1,
       }));
     }
-  }, []);
+    // The page length may have changed (a card opened, the toolbar resized); keep the camera in step.
+    syncScroll();
+  }, [syncScroll]);
 
   const jumpTo = useCallback((id) => {
     if (sceneRef.current) sceneRef.current.autopilot();
@@ -117,7 +126,17 @@ export default function Descent({ onSimple, onUnsupported }) {
       return;
     }
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior, block: 'center' });
+    if (!el) return;
+    // Centre the card, unless it's taller than the screen; then land on its top so the title shows.
+    // offsetTop ignores the card's reveal animation, which would otherwise skew the position.
+    const card = el.querySelector('.card');
+    if (card && card.offsetHeight > window.innerHeight - 140) {
+      const parent = card.offsetParent;
+      const parentTop = parent ? parent.getBoundingClientRect().top + window.scrollY : 0;
+      window.scrollTo({ top: parentTop + card.offsetTop - 90, behavior });
+    } else {
+      el.scrollIntoView({ behavior, block: 'center' });
+    }
   }, []);
 
   // Build the mountain after the loader has painted; it reports progress as it goes.
@@ -126,7 +145,7 @@ export default function Descent({ onSimple, onUnsupported }) {
     let scene = null;
     const timer = setTimeout(async () => {
       try {
-        scene = new MountainScene(canvasRef.current, {
+        scene = new MountainScene(canvasHostRef.current, {
           mobile: window.innerWidth < 760 || Boolean(window.matchMedia && window.matchMedia('(pointer: coarse)').matches),
           reducedMotion: prefersReducedMotion(),
           iceIcons: PROJECTS.map((project) => project.icon),
@@ -148,7 +167,7 @@ export default function Descent({ onSimple, onUnsupported }) {
         if (cancelled || error instanceof SceneCancelled) return;
         if (process.env.NODE_ENV === 'development') console.warn('3D run unavailable, switching to the simple view', error);
         if (scene) scene.dispose();
-        unsupportedRef.current();
+        unsupportedRef.current(activeIdRef.current);
       }
     }, 60);
     return () => {
@@ -158,6 +177,13 @@ export default function Descent({ onSimple, onUnsupported }) {
       sceneRef.current = null;
     };
   }, [measure, syncScroll]);
+
+  // If building drags on (a very slow device or connection), offer the simple page.
+  useEffect(() => {
+    if (status !== 'loading') return undefined;
+    const timer = setTimeout(() => setSlowLoad(true), 7000);
+    return () => clearTimeout(timer);
+  }, [status]);
 
   // The loader is an altimeter: it climbs to the summit as the mountain builds.
   useEffect(() => {
@@ -205,7 +231,9 @@ export default function Descent({ onSimple, onUnsupported }) {
     if (!('IntersectionObserver' in window)) return undefined;
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) setActiveId(entry.target.id);
+        if (!entry.isIntersecting) return;
+        activeIdRef.current = entry.target.id;
+        setActiveId(entry.target.id);
       });
     }, { rootMargin: '-50% 0px -50% 0px' });
     CHECKPOINTS.forEach(({ id }) => {
@@ -237,14 +265,17 @@ export default function Descent({ onSimple, onUnsupported }) {
 
   return (
     <div className={`descent descent--${status}${nameReady ? ' descent--snow-name' : ''}`}>
-      <canvas ref={canvasRef} className="descent__canvas" aria-hidden="true" />
+      <div ref={canvasHostRef} aria-hidden="true" />
       <div className="descent__shade" aria-hidden="true" />
       {flash > 0 && <div key={flash} className="descent__flash" aria-hidden="true" />}
 
-      <div className="loader" aria-hidden="true">
-        <p className="loader__label">{status === 'loading' ? 'Ascending' : 'Summit'}</p>
-        <p className="loader__alt"><span ref={loaderAltRef}>0</span><span className="loader__unit">M</span></p>
-        <span className="loader__track"><span ref={loaderBarRef} className="loader__fill" /></span>
+      <div className="loader">
+        <p className="loader__label" aria-hidden="true">{status === 'loading' ? 'Ascending' : 'Summit'}</p>
+        <p className="loader__alt" aria-hidden="true"><span ref={loaderAltRef}>0</span><span className="loader__unit">M</span></p>
+        <span className="loader__track" aria-hidden="true"><span ref={loaderBarRef} className="loader__fill" /></span>
+        {slowLoad && status === 'loading' && (
+          <button type="button" className="loader__skip" onClick={openSimple}>Taking a while? Open the simple page</button>
+        )}
       </div>
 
       <Hud
@@ -255,7 +286,7 @@ export default function Descent({ onSimple, onUnsupported }) {
         onJump={jumpTo}
         night={night}
         onToggleNight={toggleNight}
-        onSimple={onSimple}
+        onSimple={openSimple}
       />
 
       <main className="stage">
