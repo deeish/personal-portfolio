@@ -1,0 +1,612 @@
+/* ---------- Backdrop ---------- */
+
+.descent__canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+}
+
+/* Darkens the edges and the reading side so cards stay legible over bright snow. */
+.descent__shade {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(4, 6, 13, 0.5) 100%),
+    linear-gradient(180deg, rgba(4, 6, 13, 0.35) 0%, transparent 18%, transparent 80%, rgba(4, 6, 13, 0.4) 100%);
+}
+
+/* The yeti's arrival: one white flash. */
+.descent__flash {
+  position: fixed;
+  inset: 0;
+  z-index: 25;
+  pointer-events: none;
+  background: #f4f7fb;
+  animation: flash-out 1.6s ease-out forwards;
+}
+
+@keyframes flash-out {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ---------- Loader: an altimeter climbing to the summit ---------- */
+
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 10px;
+  background: var(--space);
+  transition: opacity 900ms ease 400ms, visibility 0s linear 1300ms;
+}
+
+.loader__label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--signal);
+}
+
+.loader__alt {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: clamp(40px, 7vw, 72px);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: var(--ice-0);
+}
+
+.loader__unit {
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  color: var(--ice-2);
+}
+
+.loader__track {
+  width: min(240px, 60vw);
+  height: 1px;
+  background: rgba(214, 230, 255, 0.18);
+  overflow: hidden;
+}
+
+.loader__fill {
+  display: block;
+  height: 100%;
+  background: var(--ice-0);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.descent--ready .loader {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* ---------- HUD ---------- */
+
+/* HUD text floats over bright snow and cloud, so it carries its own shadow. */
+.hud-top,
+.hud-rail,
+.hud-readout,
+.summit__meta,
+.summit__cue {
+  text-shadow: 0 0 14px rgba(4, 6, 13, 0.9), 0 0 3px rgba(4, 6, 13, 0.85);
+}
+
+.hud-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px clamp(16px, 3vw, 32px);
+  pointer-events: none;
+}
+
+.hud-top > * {
+  pointer-events: auto;
+}
+
+.hud-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.hud-brand img {
+  width: 32px;
+  height: 32px;
+}
+
+.hud-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2.2vw, 26px);
+}
+
+.hud-links a,
+.hud-links button,
+.hud-rail a {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ice-1);
+  transition: color 160ms ease;
+}
+
+.hud-links button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-shadow: inherit;
+}
+
+.hud-links a:hover,
+.hud-links button:hover,
+.hud-rail a:hover {
+  color: var(--ice-0);
+}
+
+.hud-night__icon {
+  font-size: 14px;
+  line-height: 1;
+  color: #ffd27a;
+}
+
+.hud-night[aria-pressed='true'] .hud-night__icon {
+  color: #b9d0ff;
+}
+
+.hud-rail {
+  position: fixed;
+  z-index: 20;
+  top: 50%;
+  right: clamp(16px, 2.6vw, 32px);
+  height: min(58vh, 520px);
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 600ms ease;
+}
+
+.hud-rail.is-measured {
+  opacity: 1;
+}
+
+.hud-rail__track {
+  position: relative;
+  height: 100%;
+  width: 120px;
+  border-right: 1px solid rgba(214, 230, 255, 0.28);
+}
+
+.hud-rail ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.hud-rail li {
+  position: absolute;
+  right: 0;
+  display: flex;
+  align-items: center;
+  transform: translateY(-50%);
+}
+
+.hud-rail li::after {
+  content: '';
+  width: 8px;
+  height: 1px;
+  margin-left: 10px;
+  background: rgba(214, 230, 255, 0.5);
+}
+
+.hud-rail a {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  white-space: nowrap;
+  padding: 3px 0;
+}
+
+.hud-rail li.is-active a {
+  color: var(--ice-0);
+}
+
+.hud-rail li.is-active::after {
+  width: 14px;
+  background: var(--signal);
+}
+
+.hud-rail__marker {
+  position: absolute;
+  top: 0;
+  right: -5px;
+  width: 9px;
+  height: 9px;
+  background: var(--signal);
+  transform: translateY(-50%) rotate(45deg);
+  box-shadow: 0 0 12px rgba(255, 106, 43, 0.7);
+}
+
+.hud-readout {
+  position: fixed;
+  z-index: 20;
+  left: clamp(16px, 3vw, 32px);
+  bottom: clamp(16px, 3vh, 28px);
+  display: grid;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  color: var(--ice-1);
+  text-transform: uppercase;
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.hud-readout__alt {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 26px;
+  letter-spacing: 0.02em;
+  color: var(--ice-0);
+}
+
+.hud-readout__alt .hud-readout__label,
+.hud-readout__unit {
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  color: var(--ice-1);
+}
+
+.hud-readout__label {
+  color: var(--ice-1);
+}
+
+.hud-readout__row {
+  display: flex;
+  gap: 18px;
+}
+
+.hud-readout__section {
+  display: flex;
+  gap: 10px;
+  color: var(--ice-0);
+}
+
+.hud-readout__count {
+  color: var(--signal);
+}
+
+/* ---------- Layout ---------- */
+
+.stage {
+  position: relative;
+  z-index: 1;
+}
+
+.summit {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 120px clamp(16px, 6vw, 96px) clamp(120px, 18vh, 180px);
+}
+
+.summit__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin: 0 0 22px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ice-1);
+}
+
+.summit__meta span:first-child {
+  color: var(--signal);
+}
+
+.summit__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-stretch: 125%;
+  font-variation-settings: 'wdth' 125;
+  font-size: clamp(56px, 11.5vw, 184px);
+  line-height: 0.84;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 40px rgba(4, 6, 13, 0.35);
+  transition: color 600ms ease, text-shadow 600ms ease;
+}
+
+.summit__name span {
+  display: block;
+}
+
+/* Once the snow version is drawn, the real heading stays for screen readers and search but goes see-through. */
+.descent--snow-name .summit__name {
+  color: transparent;
+  text-shadow: none;
+  -webkit-user-select: none;
+  user-select: none;
+  /* Sideways swipes push the snow on touch screens; up and down still scroll the page. */
+  touch-action: pan-y;
+}
+
+.summit__intro {
+  max-width: 52ch;
+  margin: 28px 0 0;
+  font-size: clamp(15px, 1.25vw, 18px);
+  color: var(--ice-1);
+  text-shadow: 0 1px 14px rgba(4, 6, 13, 0.95), 0 0 4px rgba(4, 6, 13, 0.8);
+}
+
+.summit__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.summit__cue {
+  position: absolute;
+  right: clamp(16px, 6vw, 96px);
+  bottom: 40px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ice-2);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.summit__cue::after {
+  content: '';
+  width: 1px;
+  height: 44px;
+  background: linear-gradient(180deg, var(--ice-1), transparent);
+  animation: cue-drop 1.8s ease-in-out infinite;
+  transform-origin: top;
+}
+
+@keyframes cue-drop {
+  0% { transform: scaleY(0); opacity: 1; }
+  60% { transform: scaleY(1); opacity: 1; }
+  100% { transform: scaleY(1); opacity: 0; }
+}
+
+.leg {
+  min-height: 125vh;
+  display: flex;
+  align-items: center;
+  padding: 14vh clamp(16px, 6vw, 96px);
+}
+
+.leg--left {
+  justify-content: flex-start;
+}
+
+.leg--right {
+  justify-content: flex-end;
+  padding-right: calc(clamp(16px, 6vw, 96px) + 140px);
+}
+
+/* ---------- Cards ---------- */
+
+.card {
+  position: relative;
+  width: min(540px, 100%);
+  padding: 30px 32px 32px;
+  background: var(--frost);
+  border: 1px solid var(--frost-line);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  backdrop-filter: blur(18px) saturate(1.2);
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 800ms ease, transform 800ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.card.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.card--wide {
+  width: min(760px, 100%);
+}
+
+/* Instrument-style corner brackets. */
+.card::before,
+.card::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+}
+
+.card::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid var(--signal);
+  border-left: 2px solid var(--signal);
+}
+
+.card::after {
+  right: -1px;
+  bottom: -1px;
+  border-right: 2px solid var(--ice-1);
+  border-bottom: 2px solid var(--ice-1);
+}
+
+.card__kicker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin: 0 0 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ice-1);
+}
+
+.card__index {
+  color: var(--signal);
+}
+
+.card__alt {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+.card__title {
+  margin: 0 0 16px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-stretch: 125%;
+  font-variation-settings: 'wdth' 125;
+  font-size: clamp(30px, 3.4vw, 46px);
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+/* ---------- Smaller screens ---------- */
+
+@media (max-width: 1100px) {
+  .hud-links a:last-child {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  /* Cards are full width here, so the fixed bars get a fade to sit on. */
+  .hud-top {
+    padding: 14px 16px 26px;
+    background: linear-gradient(180deg, rgba(4, 6, 13, 0.85) 0%, rgba(4, 6, 13, 0.55) 60%, transparent 100%);
+  }
+
+  .hud-links {
+    gap: 14px;
+  }
+
+  .hud-links a:not(:first-of-type) {
+    display: none;
+  }
+
+  .hud-night__label,
+  .hud-brand span {
+    display: none;
+  }
+
+  .hud-night__icon {
+    font-size: 17px;
+  }
+
+  .hud-rail {
+    right: 8px;
+  }
+
+  .hud-rail__track {
+    width: 14px;
+  }
+
+  .hud-rail a {
+    font-size: 0;
+    padding: 6px 0 6px 6px;
+  }
+
+  .hud-readout {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 28px 16px 12px;
+    background: linear-gradient(0deg, rgba(4, 6, 13, 0.9) 0%, rgba(4, 6, 13, 0.6) 65%, transparent 100%);
+    grid-template-columns: auto 1fr;
+    align-items: end;
+    gap: 2px 16px;
+    font-size: 10px;
+  }
+
+  .hud-readout__alt {
+    font-size: 20px;
+    grid-row: span 2;
+  }
+
+  .hud-readout__row {
+    gap: 12px;
+  }
+
+  .summit {
+    padding-bottom: 140px;
+  }
+
+  .summit__cue {
+    display: none;
+  }
+
+  .leg,
+  .leg--right {
+    justify-content: center;
+    padding: 12vh 30px 12vh 16px;
+    min-height: 110vh;
+  }
+
+  .card {
+    padding: 24px 20px 26px;
+    background: var(--frost-strong);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .summit__cue::after {
+    animation: none !important;
+  }
+}

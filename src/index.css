@@ -2,16 +2,67 @@
   box-sizing: border-box;
 }
 
+:root {
+  --space: #04060d;
+  --ice-0: #f2f6fb;
+  --ice-1: #c4d0df;
+  --ice-2: #8a9bb3;
+  --frost: rgba(9, 14, 25, 0.62);
+  --frost-strong: rgba(9, 14, 25, 0.78);
+  --frost-line: rgba(214, 230, 255, 0.16);
+  --signal: #ff6a2b;
+  --signal-ink: #120804;
+  --font-display: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  color-scheme: dark;
+}
+
+html {
+  background: var(--space);
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  background: var(--space);
+  color: var(--ice-0);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+}
+
+/* Shown for a moment while the 3D run's code downloads. */
+.boot {
+  position: fixed;
+  inset: 0;
+  background: var(--space);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
