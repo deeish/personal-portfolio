@@ -20,7 +20,7 @@ export const HERO = {
 export const ABOUT = {
   photo: `${PUBLIC}/images/Dylan-portrait.jpg`,
   intro:
-    'I\'m Dylan Salmo, a software engineer passionate about creating elegant digital experiences. I graduated with a B.S. in Computer Science from Cal State Fullerton and bring real-world experience from two software engineering internships — building full-stack features, writing SQL for production databases, and shipping React UI components with cross-functional teams.',
+    'I\'m Dylan Salmo, a software engineer passionate about creating elegant digital experiences. I graduated with a B.S. in Computer Science from Cal State Fullerton and bring real-world experience from two software engineering internships — writing SQL against a large multi-schema database, analyzing data with Python and pandas, testing REST APIs, and shipping React UI components with the engineering team.',
   sections: [
     {
       heading: 'What I do',
@@ -56,9 +56,9 @@ export const EXPERIENCE = [
     role: 'Software Engineering Intern',
     date: 'May 2023 – Sep 2023',
     bullets: [
-      'Wrote and refined SQL queries to extract, validate, and present data from a production database for internal reporting and analysis.',
-      'Built SQL-based logic (filters, joins, aggregations) to support data views and improve how information was visualized inside the company\'s software.',
-      'Contributed React UI components in collaboration with engineers to ship features and improvements.',
+      'Picked up SQL on the job and worked through a senior engineer\'s problem set against a large multi-schema database, writing joins, aggregations, filters, and validation queries and checking each result against expected output.',
+      'Sourced three decades of public earthquake data, cleaned and reshaped it with Python and pandas, and presented trends over time, activity by region, and magnitude distribution as summary statistics and an interactive GIS map to the senior engineer and team.',
+      'Tested REST API endpoints in Postman across request/response contracts, edge cases, and error handling, and documented defects for the engineering team.',
     ],
   },
   {
@@ -67,9 +67,8 @@ export const EXPERIENCE = [
     role: 'Software Engineering Intern',
     date: 'Jun 2022 – Aug 2022',
     bullets: [
-      'Built responsive UI components using HTML, CSS, JavaScript, and React, improving usability and consistency across pages.',
-      'Collaborated with engineers in an agile workflow (tickets, code reviews) to ship features and bug fixes on schedule.',
-      'Integrated front-end views with back-end endpoints to display dynamic content and handle user input reliably.',
+      'Built React components for a client-facing web application and integrated them with backend REST endpoints to render dynamic data and handle user input.',
+      'Shipped features and bug fixes in an agile team, working from tickets through code review.',
     ],
   },
   {
