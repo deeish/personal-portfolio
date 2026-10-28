@@ -13,7 +13,7 @@ function Section({ id, title, children }) {
   );
 }
 
-// The whole portfolio on one plain page: no 3D, no motion. Shown on request,
+// The whole portfolio on one plain page: no 3D, no motion. Shown on request, on phones,
 // to visitors who prefer reduced motion, and wherever WebGL isn't available.
 export default function SimpleView({ canRun, onRun, section }) {
   const location = useLocation();

@@ -4,13 +4,22 @@ import Hud from './Hud';
 import ScrambleText from './ScrambleText';
 import MountainScene, { SceneCancelled } from './scene/MountainScene';
 import { CAMERA_END, displayAltitude, heightAt, pathX } from './scene/world';
-import { CHECKPOINTS, HERO, LINKS, PROJECTS, ROUTE_TARGETS } from './content';
+import { ABOUT, CHECKPOINTS, EDUCATION, EXPERIENCE, HERO, LINKS, PROJECTS, ROUTE_TARGETS, SKILLS } from './content';
 import { AboutBody, ContactBody, EducationBody, ExperienceBody, ExternalLink, ProjectBody, SkillsBody } from './sections';
 import './Descent.css';
 
 // How far past a project's card its ice block sits, so you ski up to it while reading.
 const ICE_BLOCK_LEAD = 34;
 const SUMMIT_ALTITUDE = 8848;
+
+// The line each card shows while it's folded on a narrow screen (projects use their tagline).
+const SUMMARIES = {
+  education: `${EDUCATION.degree} · ${EDUCATION.school}`,
+  experience: [...new Set(EXPERIENCE.map((job) => job.company))].join(' · '),
+  skills: SKILLS[0].items.join(' · '),
+  about: `${ABOUT.intro.split('. ')[0]}.`,
+  contact: LINKS.email,
+};
 
 const prefersReducedMotion = () => Boolean(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
@@ -35,11 +44,16 @@ function useReveal() {
   return ref;
 }
 
-function Leg({ id, side, index, kicker, title, mark, wide, children }) {
+// On a narrow screen a full card would cover the mountain, so each one folds down to its
+// title and summary until opened. Wider screens hide the toggle and always show everything.
+// `is-open` goes on the section because useReveal adds a class to the card by hand, and a
+// changing className on the card would wipe it.
+function Leg({ id, side, index, kicker, title, summary, mark, wide, children }) {
   const ref = useReveal();
+  const [open, setOpen] = useState(false);
   const altitude = mark ? `${mark.alt.toLocaleString('en-US')} M` : '—';
   return (
-    <section id={id} className={`leg leg--${side}`} aria-labelledby={`${id}-title`}>
+    <section id={id} className={`leg leg--${side}${open ? ' is-open' : ''}`} aria-labelledby={`${id}-title`}>
       <article ref={ref} className={`card${wide ? ' card--wide' : ''}`}>
         <p className="card__kicker">
           <span className="card__index">{String(index).padStart(2, '0')}</span>
@@ -47,7 +61,17 @@ function Leg({ id, side, index, kicker, title, mark, wide, children }) {
           <span className="card__alt">ALT {altitude}</span>
         </p>
         <ScrambleText as="h2" id={`${id}-title`} className="card__title" text={title} />
-        {children}
+        <p className="card__summary">{summary}</p>
+        <button
+          type="button"
+          className="card__toggle"
+          aria-expanded={open}
+          aria-controls={`${id}-content`}
+          onClick={() => setOpen((was) => !was)}
+        >
+          {open ? 'Show less' : 'Read more'}
+        </button>
+        <div id={`${id}-content`} className="card__content">{children}</div>
       </article>
     </section>
   );
@@ -309,11 +333,11 @@ export default function Descent({ onSimple, onUnsupported }) {
           <p className="summit__cue" aria-hidden="true">Scroll to descend</p>
         </section>
 
-        <Leg id="education" side="right" index={nextIndex()} kicker="Drop-in" title="Education" mark={marks.education}>
+        <Leg id="education" side="right" index={nextIndex()} kicker="Drop-in" title="Education" summary={SUMMARIES.education} mark={marks.education}>
           <EducationBody />
         </Leg>
 
-        <Leg id="experience" side="left" index={nextIndex()} kicker="The couloir" title="Experience" mark={marks.experience} wide>
+        <Leg id="experience" side="left" index={nextIndex()} kicker="The couloir" title="Experience" summary={SUMMARIES.experience} mark={marks.experience} wide>
           <ExperienceBody />
         </Leg>
 
@@ -325,21 +349,22 @@ export default function Descent({ onSimple, onUnsupported }) {
             index={nextIndex()}
             kicker={`Gate ${String(i + 1).padStart(2, '0')}${project.featured ? ' · Featured' : ''}`}
             title={project.name}
+            summary={project.tagline}
             mark={marks[project.id]}
           >
             <ProjectBody project={project} />
           </Leg>
         ))}
 
-        <Leg id="skills" side="left" index={nextIndex()} kicker="Tree line" title="Skills" mark={marks.skills}>
+        <Leg id="skills" side="left" index={nextIndex()} kicker="Tree line" title="Skills" summary={SUMMARIES.skills} mark={marks.skills}>
           <SkillsBody />
         </Leg>
 
-        <Leg id="about" side="right" index={nextIndex()} kicker="Après-ski" title="About" mark={marks.about} wide>
+        <Leg id="about" side="right" index={nextIndex()} kicker="Après-ski" title="About" summary={SUMMARIES.about} mark={marks.about} wide>
           <AboutBody />
         </Leg>
 
-        <Leg id="contact" side="left" index={nextIndex()} kicker="Base lodge" title="Let's connect" mark={marks.contact} wide>
+        <Leg id="contact" side="left" index={nextIndex()} kicker="Base lodge" title="Let's connect" summary={SUMMARIES.contact} mark={marks.contact} wide>
           <ContactBody footnote="There are a few secrets hidden on this mountain." />
         </Leg>
       </main>

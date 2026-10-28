@@ -529,6 +529,12 @@
   text-transform: uppercase;
 }
 
+/* Only folded cards on narrow screens use these. */
+.card__summary,
+.card__toggle {
+  display: none;
+}
+
 /* ---------- Smaller screens ---------- */
 
 @media (max-width: 1100px) {
@@ -603,16 +609,63 @@
     display: none;
   }
 
+  /* Cards hang from a fixed point near mid-screen rather than centring, so opening one
+     grows it downward instead of throwing its title (and the button you tapped) off screen. */
   .leg,
   .leg--right {
     justify-content: center;
-    padding: 12vh 30px 12vh 16px;
+    align-items: flex-start;
+    padding: 38vh 30px 12vh 16px;
     min-height: 110vh;
   }
 
   .card {
     padding: 24px 20px 26px;
     background: var(--frost-strong);
+  }
+
+  /* Folded: title and one line, so the mountain shows between stops. */
+  .card__summary {
+    display: block;
+    margin: -4px 0 0;
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--ice-1);
+  }
+
+  .card__toggle {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin: 6px 0 -12px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ice-0);
+  }
+
+  .card__toggle::after {
+    content: ' +';
+    white-space: pre;
+    color: var(--signal);
+  }
+
+  .leg:not(.is-open) .card__content,
+  .leg.is-open .card__summary {
+    display: none;
+  }
+
+  .leg.is-open .card__toggle {
+    margin: -12px 0 6px;
+  }
+
+  .leg.is-open .card__toggle::after {
+    content: ' −';
   }
 }
 
